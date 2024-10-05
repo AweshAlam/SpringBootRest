@@ -1,14 +1,8 @@
-#
-# Build stage
-#
-FROM maven:3.8.3-openjdk-17 AS build
+FROM maven:3.8.5-openjdk-17 AS build
 COPY . .
-RUN mvn clean install
+RUN mvn clean package -DskipTests
 
-#
-# Package stage
-#
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/SpringBootRest-0.0.1-SNAPSHOT.jar SpringBootRest-0.0.1-SNAPSHOT.jar
+COPY --from=build /target/SpringBootRest-0.0.1-SNAPSHOT.jar SpringBootRest.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","SpringBootRest-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","SpringBootRest.jar"]
